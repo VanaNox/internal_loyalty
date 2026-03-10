@@ -131,8 +131,8 @@ body::after {
 }
 
 .stat-icon {
-  width: 30px;
-  height: 30px;
+  width: 90px;
+  height: 90px;
   border-radius: 8px;
   display: grid;
   place-items: center;
@@ -296,6 +296,14 @@ textarea {
 
 .product p {
   color: #4b5563;
+}
+
+.product-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .badges {

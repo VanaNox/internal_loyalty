@@ -5,7 +5,17 @@ const GEM_TYPES = [
   { id: "ownership", name: "Ownership", color: "#db2777" },
 ];
 
-const TEAM = ["Оля К.", "Максим П.", "Ірина С.", "Андрій Т."];
+const TEAM = [
+  "Оля К.",
+  "Максим П.",
+  "Ірина С.",
+  "Андрій Т.",
+  "Світлана Р.",
+  "Дмитро Л.",
+  "Наталя В.",
+  "Євген М.",
+  "Тарас Я.",
+];
 
 const DEFAULT_STATE = {
   user: {
@@ -20,18 +30,44 @@ const DEFAULT_STATE = {
   },
   sent: [
     { to: "Оля К.", type: "teamwork", comment: "Підхопила стендап", date: "2026-03-01" },
+    { to: "Світлана Р.", type: "impact", comment: "Швидко закрила критичний баг", date: "2026-03-04" },
+    { to: "Дмитро Л.", type: "innovation", comment: "Крута ідея для автоматизації тестів", date: "2026-03-05" },
+    { to: "Тарас Я.", type: "ownership", comment: "Взяв на себе складний реліз", date: "2026-03-07" },
   ],
   received: [
     { from: "Максим П.", type: "impact", comment: "Крутий делівері фічі", date: "2026-03-02" },
     { from: "Ірина С.", type: "innovation", comment: "Супер ідея для UX", date: "2026-03-03" },
+    { from: "Наталя В.", type: "teamwork", comment: "Дякую за допомогу з онбордингом", date: "2026-03-06" },
+    { from: "Євген М.", type: "ownership", comment: "Виручила з інцидентом у проді", date: "2026-03-08" },
+    { from: "Оля К.", type: "impact", comment: "Підтримала з важким демо", date: "2026-03-09" },
   ],
 };
 
 const PRODUCTS = [
-  { name: "Футболка GemPulse", description: "Базова футболка з брендованим принтом", cost: { teamwork: 6, impact: 2 } },
-  { name: "Худі Team Hero", description: "Тепле худі для офісу та дому", cost: { impact: 5, ownership: 4 } },
-  { name: "Сертифікат Rozetka", description: "Електронний сертифікат номіналом 1000 грн", cost: { innovation: 6, impact: 3 } },
-  { name: "Квиток на конференцію", description: "Покриття квитка на профільний івент", cost: { ownership: 6, innovation: 4 } },
+  {
+    name: "Футболка GemPulse",
+    description: "Базова футболка з брендованим принтом",
+    totalCost: 8,
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Худі Team Hero",
+    description: "Тепле худі для офісу та дому",
+    totalCost: 12,
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Сертифікат Rozetka",
+    description: "Електронний сертифікат номіналом 1000 грн",
+    totalCost: 10,
+    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Квиток на конференцію",
+    description: "Покриття квитка на профільний івент",
+    totalCost: 14,
+    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=900&q=80",
+  },
 ];
 
 function getState() {
@@ -238,14 +274,11 @@ function renderShop() {
     const card = document.createElement("div");
     card.className = "product";
 
-    const badges = Object.entries(product.cost)
-      .map(([gem, count]) => `<span class="badge">${count} ${humanizeGem(gem)}</span>`)
-      .join("");
-
     card.innerHTML = `
+      <img class="product-image" src="${product.image}" alt="${product.name}" />
       <h3>${product.name}</h3>
       <p>${product.description}</p>
-      <div class="badges">${badges}</div>
+      <div class="badges"><span class="badge">${product.totalCost} гемів</span></div>
     `;
 
     container.appendChild(card);
