@@ -1,11 +1,13 @@
+@import url("background.css");
+
 :root {
   --bg: #f3f5fb;
-  --card: #ffffff;
-  --text: #222b45;
+  --card: rgba(255, 255, 255, 0.92);
+  --text: #eaf0ff;
   --primary: #4f46e5;
   --accent: #14b8a6;
-  --muted: #6b7280;
-  --danger: #dc2626;
+  --muted: #d7def5;
+  --danger: #f87171;
 }
 
 * {
