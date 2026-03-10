@@ -17,21 +17,42 @@
       <button id="logout" class="btn">Вийти</button>
     </header>
 
-    <main class="container">
-      <section class="card">
-        <h2>Мої накопичені геми</h2>
-        <div id="gem-balance" class="gem-grid"></div>
+    <main class="container profile-page">
+      <h2 class="page-title">Профіль користувача</h2>
+
+      <section class="profile-hero card">
+        <div id="profile-initials" class="avatar">KD</div>
+        <div>
+          <h3 id="profile-name">Катерина Д.</h3>
+          <p id="profile-email" class="muted-text">kateryna.d@company.com</p>
+        </div>
       </section>
 
-      <section class="history-layout">
-        <article class="card">
-          <h2>Я віддав(-ла)</h2>
-          <ul id="sent-history" class="history-list"></ul>
-        </article>
-        <article class="card">
-          <h2>Я отримав(-ла)</h2>
-          <ul id="received-history" class="history-list"></ul>
-        </article>
+      <section id="gem-stats-grid" class="stats-grid"></section>
+
+      <section class="card history-card">
+        <h3>Історія транзакцій</h3>
+
+        <div class="history-filters">
+          <button id="history-filter-received" class="filter-btn active" type="button">Отримав від інших</button>
+          <button id="history-filter-sent" class="filter-btn" type="button">Віддав іншим</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Від кого</th>
+                <th>Кому</th>
+                <th>Тип гему</th>
+                <th>Кількість</th>
+                <th>Коментар</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body"></tbody>
+          </table>
+        </div>
       </section>
     </main>
 

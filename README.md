@@ -36,3 +36,16 @@ python3 -m http.server 4173
 - `shop.html` — магазин
 - `styles.css` — стилі
 - `app.js` — клієнтська логіка (localStorage)
+
+
+## Як відправити оновлення в GitHub (новий PR)
+
+```bash
+git checkout fix/profile-redesign-clean
+git push -u origin fix/profile-redesign-clean
+```
+
+Після пушу:
+1. Відкрити Pull Request з `fix/profile-redesign-clean` у `main`.
+2. Змерджити PR.
+3. Перевірити деплой у **Actions** та **Settings → Pages**.
