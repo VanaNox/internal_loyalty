@@ -83,104 +83,33 @@ function handleLogout() {
 }
 
 function renderProfile() {
-  const profileName = document.getElementById("profile-name");
-  const profileEmail = document.getElementById("profile-email");
-  const profileInitials = document.getElementById("profile-initials");
-  const statsGrid = document.getElementById("gem-stats-grid");
-  const historyBody = document.getElementById("history-table-body");
-  const receivedButton = document.getElementById("history-filter-received");
-  const sentButton = document.getElementById("history-filter-sent");
-
-  if (!profileName || !statsGrid || !historyBody || !receivedButton || !sentButton) return;
+  const gemBalance = document.getElementById("gem-balance");
+  const sentHistory = document.getElementById("sent-history");
+  const receivedHistory = document.getElementById("received-history");
+  if (!gemBalance || !sentHistory || !receivedHistory) return;
 
   const state = getState();
-  const initials = state.user.name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 
-  profileName.textContent = state.user.name;
-  if (profileEmail) profileEmail.textContent = state.user.email;
-  if (profileInitials) profileInitials.textContent = initials;
-
-  const statConfig = [
-    { key: "impact", title: "Золоті геми", icon: "⭐", caption: "Поточний баланс золотих гемів" },
-    { key: "teamwork", title: "Срібні геми", icon: "🪙", caption: "Поточний баланс срібних гемів" },
-    { key: "innovation", title: "Бронзові геми", icon: "🟠", caption: "Поточний баланс бронзових гемів" },
-    { key: "ownership", title: "Діамантові геми", icon: "💎", caption: "Поточний баланс діамантових гемів" },
-  ];
-
-  statsGrid.innerHTML = "";
-  statConfig.forEach((item) => {
-    const value = state.balance[item.key] || 0;
-    const card = document.createElement("article");
-    card.className = "stat-card";
-    card.innerHTML = `
-      <div class="stat-top">
-        <span>${item.title}</span>
-        <span class="stat-icon">${item.icon}</span>
-      </div>
-      <p class="stat-value">${value}</p>
-      <p class="stat-caption">${item.caption}</p>
-    `;
-    statsGrid.appendChild(card);
+  GEM_TYPES.forEach((type) => {
+    const card = document.createElement("div");
+    card.className = "gem-card";
+    card.style.background = type.color;
+    card.innerHTML = `<h3>${type.name}</h3><p>${state.balance[type.id] || 0}</p>`;
+    gemBalance.appendChild(card);
   });
 
-  const receivedHistory = state.received.map((entry) => ({
-    date: entry.date,
-    from: entry.from,
-    to: state.user.name,
-    type: humanizeGem(entry.type),
-    amount: 1,
-    comment: entry.comment,
-  }));
+  state.sent.forEach((entry) => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.date}: ${entry.to} • ${humanizeGem(entry.type)} — ${entry.comment}`;
+    sentHistory.appendChild(li);
+  });
 
-  const sentHistory = state.sent.map((entry) => ({
-    date: entry.date,
-    from: state.user.name,
-    to: entry.to,
-    type: humanizeGem(entry.type),
-    amount: 1,
-    comment: entry.comment,
-  }));
-
-  function renderHistoryRows(rows) {
-    historyBody.innerHTML = "";
-    if (!rows.length) {
-      const emptyRow = document.createElement("tr");
-      emptyRow.innerHTML = '<td colspan="6">Немає транзакцій для цього фільтра.</td>';
-      historyBody.appendChild(emptyRow);
-      return;
-    }
-
-    rows.forEach((row) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${row.date}</td>
-        <td>${row.from}</td>
-        <td>${row.to}</td>
-        <td>${row.type}</td>
-        <td>${row.amount}</td>
-        <td>${row.comment}</td>
-      `;
-      historyBody.appendChild(tr);
-    });
-  }
-
-  function setActiveFilter(mode) {
-    receivedButton.classList.toggle("active", mode === "received");
-    sentButton.classList.toggle("active", mode === "sent");
-    renderHistoryRows(mode === "received" ? receivedHistory : sentHistory);
-  }
-
-  receivedButton.addEventListener("click", () => setActiveFilter("received"));
-  sentButton.addEventListener("click", () => setActiveFilter("sent"));
-
-  setActiveFilter("received");
+  state.received.forEach((entry) => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.date}: ${entry.from} • ${humanizeGem(entry.type)} — ${entry.comment}`;
+    receivedHistory.appendChild(li);
+  });
 }
-
 
 function humanizeGem(typeId) {
   return GEM_TYPES.find((g) => g.id === typeId)?.name || typeId;
