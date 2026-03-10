@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemPulse | Профіль</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>GemPulse</h1>
+      <nav>
+        <a href="profile.html" class="active">Профіль</a>
+        <a href="transfer.html">Передача гемів</a>
+        <a href="shop.html">Магазин</a>
+      </nav>
+      <button id="logout" class="btn">Вийти</button>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Мої накопичені геми</h2>
+        <div id="gem-balance" class="gem-grid"></div>
+      </section>
+
+      <section class="history-layout">
+        <article class="card">
+          <h2>Я віддав(-ла)</h2>
+          <ul id="sent-history" class="history-list"></ul>
+        </article>
+        <article class="card">
+          <h2>Я отримав(-ла)</h2>
+          <ul id="received-history" class="history-list"></ul>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
