@@ -1,36 +1,51 @@
 # GemPulse (Internal Loyalty Platform Prototype)
 
-Статичний веб-прототип платформи внутрішньої лояльності + мінімальний Python backend з SQLite.
+Статичний веб-прототип платформи внутрішньої лояльності:
+- логін;
+- профіль з накопиченими гемами та історією;
+- передача гемів;
+- внутрішній магазин.
 
-## Швидкий запуск (frontend + API + DB)
+## Швидкий локальний запуск
 
 З кореня проєкту:
 
 ```bash
-python3 server.py
+python3 -m http.server 4173
 ```
 
 Відкрити в браузері:
 - `http://localhost:4173/index.html`
 
-## Що робить backend
-
-- створює `data.sqlite3` (якщо нема);
-- створює таблиці:
-  - `users` (name, email, password)
-  - `products` (name, description, total_cost, image_url)
-- сідає seed-дані користувачів та товарів;
-- надає API:
-  - `POST /api/login` — валідація логіну/паролю по БД
-  - `GET /api/products` — товари магазину з БД
-
-## Демо креди
-
-- `kateryna.d@company.com` / `demo123`
-- `olia.k@company.com` / `demo123`
-- `maksym.p@company.com` / `demo123`
-
 ## Деплой на GitHub Pages (автоматично)
 
-Workflow `.github/workflows/deploy-gh-pages.yml` деплоїть тільки статичну частину на push у `main`.
+У репозиторій додано workflow `.github/workflows/deploy-gh-pages.yml`.
+Після пушу в гілку `main` GitHub автоматично задеплоїть сайт на GitHub Pages.
 
+### Що потрібно увімкнути один раз у GitHub
+1. Відкрити **Settings → Pages**.
+2. У полі **Source** обрати **GitHub Actions**.
+3. Переконатися, що дефолтна гілка для релізу — `main`.
+
+Після цього при кожному пуші в `main` буде новий деплой.
+
+## Структура
+- `index.html` — логін
+- `profile.html` — профіль
+- `transfer.html` — передача гемів
+- `shop.html` — магазин
+- `styles.css` — стилі
+- `app.js` — клієнтська логіка (localStorage)
+
+
+## Як відправити оновлення в GitHub (новий PR)
+
+```bash
+git checkout fix/profile-redesign-clean
+git push -u origin fix/profile-redesign-clean
+```
+
+Після пушу:
+1. Відкрити Pull Request з `fix/profile-redesign-clean` у `main`.
+2. Змерджити PR.
+3. Перевірити деплой у **Actions** та **Settings → Pages**.
