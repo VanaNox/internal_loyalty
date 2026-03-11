@@ -43,13 +43,45 @@ body::after {
 .centered-page {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  gap: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
+.centered-page::before,
+.centered-page::after {
+  content: "";
+  position: absolute;
+  inset: auto;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  filter: blur(0px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.centered-page::before {
+  top: -180px;
+  left: -140px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(79, 70, 229, 0.45),
+    rgba(79, 70, 229, 0) 65%
+  );
+}
+
+.centered-page::after {
+  bottom: -220px;
+  right: -160px;
+  background: radial-gradient(
+    circle at 60% 40%,
+    rgba(20, 184, 166, 0.4),
+    rgba(20, 184, 166, 0) 68%
+  );
+}
 .program-title {
   margin: 0;
   text-transform: uppercase;
@@ -78,13 +110,11 @@ body::after {
   background: var(--card);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 8px 24px rgba(2, 7, 23, 0.34);
+  box-shadow: 0 6px 18px rgba(34, 43, 69, 0.08);
   margin-bottom: 16px;
-  backdrop-filter: blur(5px);
-  color: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 1;
 }
-
 .profile-hero {
   display: flex;
   align-items: center;
@@ -202,8 +232,9 @@ body::after {
 
 .auth-card {
   width: min(420px, 100%);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
-
 label {
   display: block;
   margin-bottom: 6px;
@@ -347,3 +378,4 @@ textarea {
     flex-direction: column;
   }
 }
+
