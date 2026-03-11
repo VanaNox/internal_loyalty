@@ -708,3 +708,214 @@ textarea {
     background: rgba(15, 23, 42, 0.9);
   }
 }
+
+/* Transfer page premium form */
+.transfer-page {
+  min-height: calc(100vh - 120px);
+  display: grid;
+  align-items: center;
+}
+
+.transfer-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(239, 244, 255, 0.84));
+  position: relative;
+  overflow: hidden;
+}
+
+.transfer-card::before {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.24), transparent 70%);
+  top: -80px;
+  right: -80px;
+  pointer-events: none;
+}
+
+.transfer-title {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: clamp(28px, 3.2vw, 36px);
+  letter-spacing: 0.01em;
+}
+
+.transfer-form-grid {
+  align-items: start;
+}
+
+.field-wrap {
+  position: relative;
+}
+
+.field-label-center {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #334155;
+}
+
+.combo {
+  position: relative;
+}
+
+.combo-input,
+.combo-trigger {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  padding: 12px 14px;
+  font-size: 15px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.combo-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.combo-input:focus-visible,
+.combo-trigger:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.75);
+  box-shadow: var(--shadow-focus);
+}
+
+.combo-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-mid);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  display: none;
+  z-index: 25;
+}
+
+.combo-list.open {
+  display: block;
+}
+
+.combo-option {
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.combo-option:hover,
+.combo-option.highlighted {
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.combo-empty {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.combo-trigger-placeholder {
+  color: #64748b;
+}
+
+.gem-option .gem-mini-icon,
+.gem-option-selected .gem-mini-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.gem-option-selected {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.transfer-cta-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.transfer-cta {
+  min-width: 280px;
+  min-height: 56px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.transfer-message {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.gems-fall-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.falling-gem {
+  position: fixed;
+  top: -60px;
+  display: inline-grid;
+  place-items: center;
+  animation-name: gem-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+.falling-gem .gem-mini-icon {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes gem-fall {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(var(--drift), 110vh, 0) rotate(260deg);
+    opacity: 0;
+  }
+}
+
+.pulse-success {
+  animation: pulse-success 420ms ease;
+}
+
+@keyframes pulse-success {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 760px) {
+  .transfer-cta {
+    width: 100%;
+    min-width: 0;
+  }
+}

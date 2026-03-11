@@ -294,33 +294,268 @@ function renderTransfer() {
   const form = document.getElementById("transfer-form");
   if (!form) return;
 
-  const colleagueSelect = document.getElementById("colleague");
-  const gemSelect = document.getElementById("gem-type");
+  const colleagueInput = document.getElementById("colleague-search");
+  const colleagueHidden = document.getElementById("colleague");
+  const colleagueList = document.getElementById("colleague-listbox");
+  const gemTrigger = document.getElementById("gem-type-trigger");
+  const gemHidden = document.getElementById("gem-type");
+  const gemList = document.getElementById("gem-type-listbox");
   const message = document.getElementById("transfer-message");
 
-  TEAM.forEach((name) => {
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    colleagueSelect.appendChild(option);
+  if (!colleagueInput || !colleagueHidden || !colleagueList || !gemTrigger || !gemHidden || !gemList || !message) return;
+
+  const sortedTeam = [...TEAM].sort((a, b) => a.localeCompare(b, "uk"));
+  const transferGemTypes = [
+    { id: "impact", name: "Yellow", colorClass: "yellow" },
+    { id: "teamwork", name: "We Care", colorClass: "wecare" },
+    { id: "innovation", name: "Better Together", colorClass: "better" },
+    { id: "ownership", name: "Gamechanger", colorClass: "gamechanger" },
+  ];
+
+  let colleagueOpen = false;
+  let colleagueFiltered = sortedTeam;
+  let colleagueIndex = -1;
+
+  let gemOpen = false;
+  let gemIndex = -1;
+
+  function diamondIcon(colorClass) {
+    return `
+      <span class="gem-mini-icon gem-${colorClass}" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 3h10l4 5-9 13L3 8l4-5Z" fill="currentColor" fill-opacity="0.20" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M3 8h18M12 3v18M7 3l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    `;
+  }
+
+  function openColleague() {
+    colleagueOpen = true;
+    colleagueInput.setAttribute("aria-expanded", "true");
+    colleagueList.classList.add("open");
+  }
+
+  function closeColleague() {
+    colleagueOpen = false;
+    colleagueInput.setAttribute("aria-expanded", "false");
+    colleagueList.classList.remove("open");
+    colleagueInput.setAttribute("aria-activedescendant", "");
+    colleagueIndex = -1;
+  }
+
+  function renderColleagues() {
+    colleagueList.innerHTML = "";
+
+    if (!colleagueFiltered.length) {
+      const empty = document.createElement("li");
+      empty.className = "combo-empty";
+      empty.textContent = "Нічого не знайдено";
+      colleagueList.appendChild(empty);
+      return;
+    }
+
+    colleagueFiltered.forEach((name, index) => {
+      const option = document.createElement("li");
+      option.id = `colleague-option-${index}`;
+      option.setAttribute("role", "option");
+      option.className = "combo-option";
+      option.setAttribute("aria-selected", String(name === colleagueHidden.value));
+      option.textContent = name;
+
+      option.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        colleagueHidden.value = name;
+        colleagueInput.value = name;
+        closeColleague();
+      });
+
+      colleagueList.appendChild(option);
+    });
+  }
+
+  function filterColleagues(query) {
+    const normalized = query.trim().toLowerCase();
+    colleagueFiltered = sortedTeam.filter((name) => name.toLowerCase().includes(normalized));
+    colleagueIndex = -1;
+    renderColleagues();
+  }
+
+  function highlightColleague(index) {
+    const options = [...colleagueList.querySelectorAll('.combo-option')];
+    options.forEach((opt, i) => {
+      opt.classList.toggle('highlighted', i === index);
+      if (i === index) {
+        colleagueInput.setAttribute("aria-activedescendant", opt.id);
+      }
+    });
+  }
+
+  colleagueInput.addEventListener("focus", () => {
+    filterColleagues(colleagueInput.value);
+    openColleague();
   });
 
-  GEM_TYPES.forEach((gem) => {
-    const option = document.createElement("option");
-    option.value = gem.id;
-    option.textContent = gem.name;
-    gemSelect.appendChild(option);
+  colleagueInput.addEventListener("input", () => {
+    filterColleagues(colleagueInput.value);
+    openColleague();
   });
+
+  colleagueInput.addEventListener("keydown", (event) => {
+    if (!colleagueOpen && ["ArrowDown", "ArrowUp"].includes(event.key)) {
+      openColleague();
+    }
+
+    const max = colleagueFiltered.length - 1;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      colleagueIndex = Math.min(max, colleagueIndex + 1);
+      highlightColleague(colleagueIndex);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      colleagueIndex = Math.max(0, colleagueIndex - 1);
+      highlightColleague(colleagueIndex);
+    } else if (event.key === "Enter") {
+      if (colleagueOpen && colleagueIndex >= 0 && colleagueFiltered[colleagueIndex]) {
+        event.preventDefault();
+        const selected = colleagueFiltered[colleagueIndex];
+        colleagueHidden.value = selected;
+        colleagueInput.value = selected;
+        closeColleague();
+      }
+    } else if (event.key === "Escape") {
+      closeColleague();
+    }
+  });
+
+  function openGem() {
+    gemOpen = true;
+    gemTrigger.setAttribute("aria-expanded", "true");
+    gemList.classList.add("open");
+  }
+
+  function closeGem() {
+    gemOpen = false;
+    gemTrigger.setAttribute("aria-expanded", "false");
+    gemList.classList.remove("open");
+    gemTrigger.setAttribute("aria-activedescendant", "");
+    gemIndex = -1;
+  }
+
+  function renderGemList() {
+    gemList.innerHTML = "";
+    transferGemTypes.forEach((gem, index) => {
+      const option = document.createElement("li");
+      option.id = `gem-option-${index}`;
+      option.setAttribute("role", "option");
+      option.className = "combo-option gem-option";
+      option.setAttribute("aria-selected", String(gem.id === gemHidden.value));
+      option.innerHTML = `${diamondIcon(gem.colorClass)}<span>${gem.name}</span>`;
+
+      option.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        gemHidden.value = gem.id;
+        gemTrigger.innerHTML = `<span class="gem-option-selected">${diamondIcon(gem.colorClass)}<span>${gem.name}</span></span>`;
+        closeGem();
+      });
+
+      gemList.appendChild(option);
+    });
+  }
+
+  gemTrigger.addEventListener("click", () => {
+    if (gemOpen) closeGem();
+    else openGem();
+  });
+
+  gemTrigger.addEventListener("keydown", (event) => {
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+      event.preventDefault();
+      if (!gemOpen) {
+        openGem();
+        gemIndex = 0;
+      } else if (event.key === "ArrowDown") {
+        gemIndex = Math.min(transferGemTypes.length - 1, gemIndex + 1);
+      } else if (event.key === "ArrowUp") {
+        gemIndex = Math.max(0, gemIndex - 1);
+      } else if ((event.key === "Enter" || event.key === " ") && gemIndex >= 0) {
+        const gem = transferGemTypes[gemIndex];
+        gemHidden.value = gem.id;
+        gemTrigger.innerHTML = `<span class="gem-option-selected">${diamondIcon(gem.colorClass)}<span>${gem.name}</span></span>`;
+        closeGem();
+      }
+
+      const options = [...gemList.querySelectorAll('.combo-option')];
+      options.forEach((opt, i) => {
+        opt.classList.toggle('highlighted', i === gemIndex);
+        if (i === gemIndex) gemTrigger.setAttribute("aria-activedescendant", opt.id);
+      });
+    }
+
+    if (event.key === "Escape") {
+      closeGem();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!colleagueInput.closest("#colleague-combobox")?.contains(event.target)) {
+      closeColleague();
+    }
+
+    if (!gemTrigger.closest("#gem-type-dropdown")?.contains(event.target)) {
+      closeGem();
+    }
+  });
+
+  function runGemsFallAnimation() {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cta = document.querySelector(".transfer-cta");
+
+    if (reducedMotion) {
+      cta?.classList.add("pulse-success");
+      setTimeout(() => cta?.classList.remove("pulse-success"), 500);
+      return;
+    }
+
+    const layer = document.getElementById("gems-fall-layer");
+    if (!layer) return;
+
+    const gemsCount = 28;
+    layer.innerHTML = "";
+
+    for (let i = 0; i < gemsCount; i += 1) {
+      const gem = document.createElement("span");
+      const palette = ["yellow", "wecare", "better", "gamechanger"];
+      const colorClass = palette[Math.floor(Math.random() * palette.length)];
+      const drift = Math.round((Math.random() - 0.5) * 120);
+      const duration = 1.5 + Math.random() * 1;
+      const delay = Math.random() * 0.6;
+
+      gem.className = `falling-gem gem-${colorClass}`;
+      gem.style.left = `${Math.random() * 100}vw`;
+      gem.style.setProperty("--drift", `${drift}px`);
+      gem.style.animationDuration = `${duration}s`;
+      gem.style.animationDelay = `${delay}s`;
+      gem.innerHTML = diamondIcon(colorClass);
+      layer.appendChild(gem);
+
+      setTimeout(() => gem.remove(), (duration + delay) * 1000 + 100);
+    }
+  }
+
+  filterColleagues("");
+  renderGemList();
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const colleague = colleagueSelect.value;
-    const type = gemSelect.value;
+    const colleague = colleagueHidden.value;
+    const type = gemHidden.value;
     const comment = document.getElementById("comment").value.trim();
 
     if (!colleague || !type || !comment) {
       message.textContent = "Заповніть усі поля.";
-      message.className = "message error";
+      message.className = "message error transfer-message";
       return;
     }
 
@@ -328,11 +563,17 @@ function renderTransfer() {
     state.sent.unshift({ to: colleague, type, comment, date: new Date().toISOString().split("T")[0] });
     saveState(state);
 
-    message.textContent = "Гем успішно надіслано 🎉";
-    message.className = "message success";
+    message.textContent = "Винагороду надіслано 🎉";
+    message.className = "message success transfer-message";
     form.reset();
+    gemHidden.value = "";
+    colleagueHidden.value = "";
+    gemTrigger.innerHTML = '<span class="combo-trigger-placeholder">Оберіть тип</span>';
+
+    runGemsFallAnimation();
   });
 }
+
 
 function renderShop() {
   const container = document.getElementById("shop-grid");
