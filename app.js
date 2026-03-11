@@ -156,12 +156,12 @@ function renderProfile() {
   const profileName = document.getElementById("profile-name");
   const profileEmail = document.getElementById("profile-email");
   const profileInitials = document.getElementById("profile-initials");
-  const statsGrid = document.getElementById("gem-stats-grid");
+  const gemsSection = document.getElementById("gems-section");
   const historyBody = document.getElementById("history-table-body");
   const receivedButton = document.getElementById("history-filter-received");
   const sentButton = document.getElementById("history-filter-sent");
 
-  if (!profileName || !statsGrid || !historyBody || !receivedButton || !sentButton) return;
+  if (!profileName || !gemsSection || !historyBody || !receivedButton || !sentButton) return;
 
   const state = getState();
   const initials = state.user.name
@@ -175,30 +175,57 @@ function renderProfile() {
   if (profileEmail) profileEmail.textContent = state.user.email;
   if (profileInitials) profileInitials.textContent = initials;
 
-  const statConfig = [
-    { key: "impact", title: "Золоті геми", icon: "⭐", caption: "Поточний баланс золотих гемів", accent: "impact" },
-    { key: "teamwork", title: "Срібні геми", icon: "🪙", caption: "Поточний баланс срібних гемів", accent: "teamwork" },
-    { key: "innovation", title: "Бронзові геми", icon: "🟠", caption: "Поточний баланс бронзових гемів", accent: "innovation" },
-    { key: "ownership", title: "Діамантові геми", icon: "💎", caption: "Поточний баланс діамантових гемів", accent: "ownership" },
+  const receivedGemItems = [
+    { id: "impact", name: "Yellow", colorClass: "yellow", count: state.balance.impact },
+    { id: "teamwork", name: "We Care", colorClass: "wecare", count: state.balance.teamwork },
+    { id: "innovation", name: "Better Together", colorClass: "better", count: state.balance.innovation },
+    { id: "ownership", name: "Gamechanger", colorClass: "gamechanger", count: state.balance.ownership },
   ];
 
-  statsGrid.innerHTML = "";
-  statConfig.forEach((item, index) => {
-    const value = state.balance[item.key] || 0;
-    const card = document.createElement("article");
-    card.className = "stat-card";
-    card.dataset.accent = item.accent;
-    card.style.animationDelay = `${index * 70}ms`;
-    card.innerHTML = `
-      <div class="stat-top">
-        <span class="stat-label">${item.title}</span>
-        <span class="stat-icon" aria-hidden="true">${item.icon}</span>
-      </div>
-      <p class="stat-value">${value}</p>
-      <p class="stat-caption">${item.caption}</p>
+  const transferGemItems = [
+    { id: "managerial", name: "Managerial", colorClass: "managerial", count: null },
+    { id: "transparent", name: "Transparent", colorClass: "transparent", count: null },
+  ];
+
+  function createGemIcon(colorClass) {
+    return `
+      <span class="gem-mini-icon gem-${colorClass}" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 3h10l4 5-9 13L3 8l4-5Z" fill="currentColor" fill-opacity="0.20" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M3 8h18M12 3v18M7 3l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
     `;
-    statsGrid.appendChild(card);
-  });
+  }
+
+  function createGemCard(item) {
+    const count = item.count == null ? "—" : item.count;
+    return `
+      <article class="gem-mini-card" tabindex="0">
+        <div class="gem-mini-content">
+          <p class="gem-mini-name">${item.name}</p>
+          <p class="gem-mini-count">${count}</p>
+        </div>
+        ${createGemIcon(item.colorClass)}
+      </article>
+    `;
+  }
+
+  function createGemsBlock(title, items, kind) {
+    return `
+      <section class="gems-block gems-block--${kind} card">
+        <h3 class="gems-block-title">${title}</h3>
+        <div class="gems-mini-grid">
+          ${items.map((item) => createGemCard(item)).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  gemsSection.innerHTML = `
+    ${createGemsBlock("Мої геми", receivedGemItems, "received")}
+    ${createGemsBlock("Доступні для Передачі", transferGemItems, "transfer")}
+  `;
 
   const receivedHistory = state.received.map((entry) => ({
     date: entry.date,

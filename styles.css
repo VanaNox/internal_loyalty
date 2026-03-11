@@ -254,6 +254,100 @@ body.scrolled .topbar {
   cursor: pointer;
 }
 
+
+.gems-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.gems-block {
+  padding: 18px;
+}
+
+.gems-block-title {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.gems-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gems-block--transfer .gems-mini-grid {
+  grid-template-columns: 1fr;
+}
+
+.gem-mini-card {
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(245,248,255,0.88));
+  box-shadow: var(--shadow-soft);
+  padding: 14px 16px;
+  min-height: 118px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-fast);
+}
+
+.gem-mini-card:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: var(--shadow-mid);
+}
+
+.gem-mini-card:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus), var(--shadow-mid);
+  border-color: rgba(99, 102, 241, 0.56);
+}
+
+.gem-mini-content {
+  min-width: 0;
+}
+
+.gem-mini-icon {
+  width: 102px;
+  height: 102px;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.gem-mini-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gem-mini-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-primary);
+  line-height: 1.15;
+}
+
+.gem-mini-count {
+  margin: 8px 0 0;
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.gem-yellow { color: #d4a106; }
+.gem-wecare { color: #ec4899; }
+.gem-better { color: #22c55e; }
+.gem-gamechanger { color: #2563eb; }
+.gem-managerial { color: #f59e0b; }
+.gem-transparent { color: #cbd5e1; }
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(180px, 1fr));
@@ -546,6 +640,10 @@ textarea {
 }
 
 @media (max-width: 1024px) {
+  .gems-layout {
+    grid-template-columns: 1fr;
+  }
+
   .stats-grid {
     grid-template-columns: repeat(2, minmax(180px, 1fr));
   }
@@ -576,6 +674,23 @@ textarea {
   .stats-grid,
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gems-mini-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gem-mini-icon {
+    width: 84px;
+    height: 84px;
+  }
+
+  .gem-mini-name {
+    font-size: 18px;
+  }
+
+  .gem-mini-count {
+    font-size: 28px;
   }
 
   .history-filters {
