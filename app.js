@@ -70,6 +70,8 @@ const PRODUCTS = [
   },
 ];
 
+const API_BASE = "";
+
 function getState() {
   const raw = localStorage.getItem("gempulse_state");
   if (!raw) {
@@ -100,11 +102,43 @@ function handleLogin() {
   const form = document.getElementById("login-form");
   if (!form) return;
 
-  form.addEventListener("submit", (event) => {
+  let message = document.getElementById("login-message");
+  if (!message) {
+    message = document.createElement("p");
+    message.id = "login-message";
+    message.className = "message";
+    form.appendChild(message);
+  }
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    localStorage.setItem("gempulse_auth", "true");
-    getState();
-    window.location.href = "profile.html";
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        message.textContent = "Невірний email або пароль.";
+        message.className = "message error";
+        return;
+      }
+
+      const data = await response.json();
+      const state = getState();
+      state.user = data.user;
+      saveState(state);
+
+      localStorage.setItem("gempulse_auth", "true");
+      window.location.href = "profile.html";
+    } catch (_error) {
+      message.textContent = "Не вдалося підключитися до API. Запусти server.py.";
+      message.className = "message error";
+    }
   });
 }
 
@@ -142,21 +176,23 @@ function renderProfile() {
   if (profileInitials) profileInitials.textContent = initials;
 
   const statConfig = [
-    { key: "impact", title: "Золоті геми", icon: "⭐", caption: "Поточний баланс золотих гемів" },
-    { key: "teamwork", title: "Срібні геми", icon: "🪙", caption: "Поточний баланс срібних гемів" },
-    { key: "innovation", title: "Бронзові геми", icon: "🟠", caption: "Поточний баланс бронзових гемів" },
-    { key: "ownership", title: "Діамантові геми", icon: "💎", caption: "Поточний баланс діамантових гемів" },
+    { key: "impact", title: "Золоті геми", icon: "⭐", caption: "Поточний баланс золотих гемів", accent: "impact" },
+    { key: "teamwork", title: "Срібні геми", icon: "🪙", caption: "Поточний баланс срібних гемів", accent: "teamwork" },
+    { key: "innovation", title: "Бронзові геми", icon: "🟠", caption: "Поточний баланс бронзових гемів", accent: "innovation" },
+    { key: "ownership", title: "Діамантові геми", icon: "💎", caption: "Поточний баланс діамантових гемів", accent: "ownership" },
   ];
 
   statsGrid.innerHTML = "";
-  statConfig.forEach((item) => {
+  statConfig.forEach((item, index) => {
     const value = state.balance[item.key] || 0;
     const card = document.createElement("article");
     card.className = "stat-card";
+    card.dataset.accent = item.accent;
+    card.style.animationDelay = `${index * 70}ms`;
     card.innerHTML = `
       <div class="stat-top">
-        <span>${item.title}</span>
-        <span class="stat-icon">${item.icon}</span>
+        <span class="stat-label">${item.title}</span>
+        <span class="stat-icon" aria-hidden="true">${item.icon}</span>
       </div>
       <p class="stat-value">${value}</p>
       <p class="stat-caption">${item.caption}</p>
@@ -168,6 +204,7 @@ function renderProfile() {
     date: entry.date,
     from: entry.from,
     to: state.user.name,
+    typeId: entry.type,
     type: humanizeGem(entry.type),
     amount: 1,
     comment: entry.comment,
@@ -177,6 +214,7 @@ function renderProfile() {
     date: entry.date,
     from: state.user.name,
     to: entry.to,
+    typeId: entry.type,
     type: humanizeGem(entry.type),
     amount: 1,
     comment: entry.comment,
@@ -197,7 +235,7 @@ function renderProfile() {
         <td>${row.date}</td>
         <td>${row.from}</td>
         <td>${row.to}</td>
-        <td>${row.type}</td>
+        <td><span class="gem-pill ${row.typeId}">${row.type}</span></td>
         <td>${row.amount}</td>
         <td>${row.comment}</td>
       `;
@@ -206,9 +244,12 @@ function renderProfile() {
   }
 
   function setActiveFilter(mode) {
-    receivedButton.classList.toggle("active", mode === "received");
-    sentButton.classList.toggle("active", mode === "sent");
-    renderHistoryRows(mode === "received" ? receivedHistory : sentHistory);
+    const isReceived = mode === "received";
+    receivedButton.classList.toggle("active", isReceived);
+    sentButton.classList.toggle("active", !isReceived);
+    receivedButton.setAttribute("aria-selected", String(isReceived));
+    sentButton.setAttribute("aria-selected", String(!isReceived));
+    renderHistoryRows(isReceived ? receivedHistory : sentHistory);
   }
 
   receivedButton.addEventListener("click", () => setActiveFilter("received"));
@@ -270,19 +311,38 @@ function renderShop() {
   const container = document.getElementById("shop-grid");
   if (!container) return;
 
-  PRODUCTS.forEach((product) => {
-    const card = document.createElement("div");
-    card.className = "product";
+  async function loadProducts() {
+    try {
+      const response = await fetch(`${API_BASE}/api/products`);
+      if (!response.ok) throw new Error("Products load failed");
+      return await response.json();
+    } catch (_error) {
+      return PRODUCTS;
+    }
+  }
 
-    card.innerHTML = `
-      <img class="product-image" src="${product.image}" alt="${product.name}" />
-      <h3>${product.name}</h3>
-      <p>${product.description}</p>
-      <div class="badges"><span class="badge">${product.totalCost} гемів</span></div>
-    `;
+  loadProducts().then((products) => {
+    container.innerHTML = "";
+    products.forEach((product) => {
+      const card = document.createElement("div");
+      card.className = "product";
 
-    container.appendChild(card);
+      card.innerHTML = `
+        <img class="product-image" src="${product.image}" alt="${product.name}" />
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <div class="badges"><span class="badge">${product.totalCost} гемів</span></div>
+      `;
+
+      container.appendChild(card);
+    });
   });
+}
+
+function initScrollState() {
+  const update = () => document.body.classList.toggle("scrolled", window.scrollY > 8);
+  update();
+  window.addEventListener("scroll", update, { passive: true });
 }
 
 guardAuth();
@@ -291,3 +351,4 @@ handleLogout();
 renderProfile();
 renderTransfer();
 renderShop();
+initScrollState();
