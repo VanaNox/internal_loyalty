@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemPulse | Профіль</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>GemPulse</h1>
+      <nav>
+        <a href="profile.html" class="active">Профіль</a>
+        <a href="transfer.html">Передача гемів</a>
+        <a href="shop.html">Магазин</a>
+      </nav>
+      <button id="logout" class="btn btn-ghost">Вийти</button>
+    </header>
+
+    <main class="container profile-page">
+      <h2 class="page-title">Профіль користувача</h2>
+
+      <section class="profile-hero card">
+        <div id="profile-initials" class="avatar">KD</div>
+
+        <div class="profile-meta">
+          <h3 id="profile-name">Катерина Д.</h3>
+          <p id="profile-email" class="muted-text">kateryna.d@company.com</p>
+          <p class="profile-badge hidden" aria-hidden="true">⭐ Data Contributor</p>
+        </div>
+
+        <button class="icon-btn" type="button" aria-label="Редагувати профіль">
+          ✎
+        </button>
+      </section>
+
+      <section id="gem-stats-grid" class="stats-grid"></section>
+
+      <section class="card history-card">
+        <h3>Історія транзакцій</h3>
+
+        <div class="history-filters" role="tablist" aria-label="Фільтр історії транзакцій">
+          <button id="history-filter-received" class="filter-btn active" type="button" role="tab" aria-selected="true">Отримані</button>
+          <button id="history-filter-sent" class="filter-btn" type="button" role="tab" aria-selected="false">Віддані</button>
+        </div>
+
+        <div class="table-wrap" aria-label="Таблиця транзакцій">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Від кого</th>
+                <th>Кому</th>
+                <th>Тип гему</th>
+                <th>Кількість</th>
+                <th>Коментар</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
