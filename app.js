@@ -131,17 +131,9 @@ function handleLogin() {
   const otpState = {
     sent: false,
     email: "",
-    expectedCode: "",
   };
 
-  async function sendOtp(email) {
-    const payload = {
-      type: "otp_send",
-      email,
-      otp_period_minutes: OTP_PERIOD_MINUTES,
-      otp_subject: OTP_SUBJECT,
-    };
-
+  async function callOtpApi(payload) {
     const response = await fetch(OTP_API_URL, {
       method: "POST",
       headers: {
@@ -150,11 +142,44 @@ function handleLogin() {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      throw new Error(`OTP API failed: ${response.status}`);
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (_parseError) {
+      data = null;
     }
 
-    return response.json();
+    if (!response.ok) {
+      const error = new Error(`OTP API failed: ${response.status}`);
+      error.responseData = data;
+      throw error;
+    }
+
+    if (data?.code !== 200 || data?.data?.status !== "ok") {
+      const error = new Error("OTP API returned non-success status");
+      error.responseData = data;
+      throw error;
+    }
+
+    return data;
+  }
+
+  async function sendOtp(email) {
+    return callOtpApi({
+      type: "otp_send",
+      email,
+      otp_period_minutes: OTP_PERIOD_MINUTES,
+      otp_subject: OTP_SUBJECT,
+    });
+  }
+
+  async function verifyOtp(email, otpCode) {
+    return callOtpApi({
+      type: "otp_check",
+      email,
+      otp_code: otpCode,
+      otp_subject: OTP_SUBJECT,
+    });
   }
 
   form.addEventListener("submit", async (event) => {
@@ -172,23 +197,17 @@ function handleLogin() {
       submitButton.textContent = "Надсилання...";
 
       try {
-        const data = await sendOtp(email);
-        const expectedCode = String(data?.otp_code || "").trim();
-
-        if (!expectedCode) {
-          throw new Error("OTP code is missing in API response");
-        }
+        await sendOtp(email);
 
         otpState.sent = true;
         otpState.email = email;
-        otpState.expectedCode = expectedCode;
 
         otpStep?.classList.remove("hidden");
         otpInput?.focus();
         emailInput.setAttribute("readonly", "readonly");
 
         submitButton.textContent = "Підтвердити OTP";
-        message.textContent = "Код OTP відправлено на пошту. Введіть код для входу.";
+        message.textContent = "OTP успішно відправлено на пошту. Введіть код для входу.";
         message.className = "message";
       } catch (_error) {
         message.textContent = "Не вдалося надіслати OTP. Перевірте пошту або доступ до API.";
@@ -212,32 +231,38 @@ function handleLogin() {
       message.textContent = "Пошта змінена. Надішліть OTP ще раз.";
       message.className = "message error";
       otpState.sent = false;
-      otpState.expectedCode = "";
       otpStep?.classList.add("hidden");
       emailInput.removeAttribute("readonly");
       submitButton.textContent = "Увійти";
       return;
     }
 
-    if (enteredOtp !== otpState.expectedCode) {
-      message.textContent = "Невірний OTP код.";
+    submitButton.disabled = true;
+    submitButton.textContent = "Перевірка OTP...";
+
+    try {
+      await verifyOtp(email, enteredOtp);
+
+      const state = getState();
+      state.user.email = email;
+      const emailName = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
+      if (emailName) {
+        state.user.name = emailName
+          .split(" ")
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ");
+      }
+
+      saveState(state);
+      localStorage.setItem("gempulse_auth", "true");
+      window.location.href = "profile.html";
+    } catch (_error) {
+      message.textContent = "Невірний OTP код або код прострочений.";
       message.className = "message error";
-      return;
+      submitButton.textContent = "Підтвердити OTP";
+    } finally {
+      submitButton.disabled = false;
     }
-
-    const state = getState();
-    state.user.email = email;
-    const emailName = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
-    if (emailName) {
-      state.user.name = emailName
-        .split(" ")
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(" ");
-    }
-
-    saveState(state);
-    localStorage.setItem("gempulse_auth", "true");
-    window.location.href = "profile.html";
   });
 }
 

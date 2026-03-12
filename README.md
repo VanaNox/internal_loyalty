@@ -30,7 +30,7 @@ python3 server.py
 - `olia.k@company.com` / `demo123`
 - `maksym.p@company.com` / `demo123`
 
-> Для static-режиму логін у `index.html` працює через OTP API (`otp_send`), після чого користувач вводить OTP код і проходить валідацію на клієнті.
+> Для static-режиму логін у `index.html` працює через OTP API: спочатку `otp_send`, далі перевірка коду через `otp_check`.
 
 ## Деплой на GitHub Pages (автоматично)
 
