@@ -5,7 +5,6 @@ export default function LoginPage() {
     <main className="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-4 py-10 md:px-6">
       <section className="glass w-full max-w-md p-8">
         <p className="mb-3 text-sm uppercase tracking-[0.22em] text-sky-200/80">SFP Internal Loyalty Program</p>
-        <h1 className="mb-6 text-3xl font-semibold text-white">Welcome to GemPulse</h1>
         <div className="space-y-4">
           <input className="w-full rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3" placeholder="Email" />
           <input className="w-full rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3" placeholder="Password" type="password" />
@@ -13,7 +12,9 @@ export default function LoginPage() {
             Увійти
           </Link>
         </div>
+        <h1 className="mt-6 text-center text-3xl font-semibold text-white">GemPulse</h1>
       </section>
     </main>
   );
 }
+

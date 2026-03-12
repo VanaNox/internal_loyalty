@@ -1143,10 +1143,11 @@ textarea:focus-visible {
 .login-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(380px, 460px);
+  grid-template-columns: minmax(380px, 460px);
   align-items: center;
+  justify-items: center;
   justify-content: center;
-  column-gap: clamp(24px, 7vw, 98px);
+  row-gap: 20px;
   padding: clamp(24px, 5vw, 64px);
   position: relative;
 }
@@ -1197,11 +1198,11 @@ textarea:focus-visible {
   border-radius: 20px;
 }
 
-.login-card h3 {
-  margin: 0 0 24px;
+.login-brand-under {
+  margin: 18px 0 0;
   text-align: center;
   color: #16233a;
-  font-size: clamp(42px, 4vw, 58px);
+  font-size: clamp(36px, 4vw, 52px);
   font-weight: 700;
 }
 
@@ -1368,7 +1369,7 @@ textarea:focus-visible {
     letter-spacing: 0.1em;
   }
 
-  .login-card h3 {
+   .login-brand-under {
     font-size: clamp(30px, 8vw, 44px);
   }
 
@@ -1391,3 +1392,6 @@ textarea:focus-visible {
     font-size: 20px;
   }
 }
+
+
+
