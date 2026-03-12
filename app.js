@@ -72,6 +72,16 @@ const PRODUCTS = [
 
 const API_BASE = "";
 
+const SHOP_META = {
+  "Футболка GemPulse": { category: "Swag", icon: "👕", tint: "swag", left: 15, title: "Company Swag Bundle" },
+  "Худі Team Hero": { category: "Swag", icon: "🎁", tint: "shopping", left: 20, title: "Gift Card €25" },
+  "Сертифікат Rozetka": { category: "Shopping", icon: "🛍️", tint: "shopping", left: 12, title: "Gift Card €25" },
+  "Квиток на конференцію": { category: "Experience", icon: "🍽️", tint: "experience", left: 2, title: "Lunch with the CEO" },
+};
+
+const SHOP_CATEGORIES = ["All", "Shopping", "Time Off", "Swag", "Experience", "Learning", "Impact", "Wellness", "Productivity"];
+
+
 function getState() {
   const raw = localStorage.getItem("gempulse_state");
   if (!raw) {
@@ -577,6 +587,8 @@ function renderTransfer() {
 
 function renderShop() {
   const container = document.getElementById("shop-grid");
+  const searchInput = document.getElementById("shop-search");
+  const categoryContainer = document.getElementById("shop-categories");
   if (!container) return;
 
   async function loadProducts() {
@@ -589,23 +601,95 @@ function renderShop() {
     }
   }
 
-  loadProducts().then((products) => {
+  function getUserTotalGems() {
+    const state = getState();
+    return Object.values(state.balance).reduce((sum, value) => sum + (Number(value) || 0), 0);
+  }
+
+  let activeCategory = "All";
+  let query = "";
+
+  function renderCategories() {
+    if (!categoryContainer) return;
+    categoryContainer.innerHTML = "";
+
+    SHOP_CATEGORIES.forEach((category) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `shop-chip ${activeCategory === category ? "active" : ""}`;
+      btn.textContent = category;
+      btn.addEventListener("click", () => {
+        activeCategory = category;
+        renderCategories();
+        renderProducts();
+      });
+      categoryContainer.appendChild(btn);
+    });
+  }
+
+  let productsCache = [];
+
+  function renderProducts() {
+    const totalGems = getUserTotalGems();
+    const filtered = productsCache.filter((product) => {
+      const searchOk = !query || product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query);
+      const categoryOk = activeCategory === "All" || product.category === activeCategory;
+      return searchOk && categoryOk;
+    });
+
     container.innerHTML = "";
-    products.forEach((product) => {
-      const card = document.createElement("div");
-      card.className = "product";
+    filtered.forEach((product) => {
+      const needMore = Math.max(0, product.totalCost - totalGems);
+      const card = document.createElement("article");
+      card.className = "shop-card-premium";
 
       card.innerHTML = `
-        <img class="product-image" src="${product.image}" alt="${product.name}" />
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <div class="badges"><span class="badge">${product.totalCost} гемів</span></div>
+        <div class="shop-card-top tint-${product.tint}">
+          <div class="shop-emoji">${product.icon}</div>
+          <span class="shop-tag">${product.category}</span>
+          <h3>${product.title || product.name}</h3>
+          <p>${product.description}</p>
+        </div>
+        <div class="shop-card-bottom">
+          <div class="shop-row">
+            <span class="shop-cost">💎 ${product.totalCost} gems</span>
+            <span class="shop-left">${product.left ?? 0} left</span>
+          </div>
+          <button type="button" class="shop-disabled-cta" disabled>
+            ${needMore > 0 ? `Need ${needMore} more gems` : "Available now"}
+          </button>
+        </div>
       `;
 
       container.appendChild(card);
     });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (event) => {
+      query = event.target.value.trim().toLowerCase();
+      renderProducts();
+    });
+  }
+
+  loadProducts().then((products) => {
+    productsCache = products.map((product) => {
+      const meta = SHOP_META[product.name] || {};
+      return {
+        ...product,
+        title: meta.title || product.name,
+        category: meta.category || "Shopping",
+        icon: meta.icon || "🎁",
+        tint: meta.tint || "shopping",
+        left: meta.left ?? 8,
+      };
+    });
+
+    renderCategories();
+    renderProducts();
   });
 }
+
 
 function initScrollState() {
   const update = () => document.body.classList.toggle("scrolled", window.scrollY > 8);
