@@ -71,6 +71,9 @@ const PRODUCTS = [
 ];
 
 const API_BASE = "";
+const OTP_API_URL = "https://r3qwmcb4p9.apigw.loqator.com.ua/rnd-portal";
+const OTP_SUBJECT = "crm_rnd";
+const OTP_PERIOD_MINUTES = "60";
 
 const SHOP_META = {
   "Футболка GemPulse": { category: "Swag", icon: "👕", tint: "swag", left: 15, title: "Company Swag Bundle" },
@@ -112,6 +115,11 @@ function handleLogin() {
   const form = document.getElementById("login-form");
   if (!form) return;
 
+  const emailInput = document.getElementById("email");
+  const otpStep = document.getElementById("otp-step");
+  const otpInput = document.getElementById("otp-code");
+  const submitButton = document.getElementById("login-submit");
+
   let message = document.getElementById("login-message");
   if (!message) {
     message = document.createElement("p");
@@ -120,21 +128,111 @@ function handleLogin() {
     form.appendChild(message);
   }
 
-  form.addEventListener("submit", (event) => {
+  const otpState = {
+    sent: false,
+    email: "",
+    expectedCode: "",
+  };
+
+  async function sendOtp(email) {
+    const payload = {
+      type: "otp_send",
+      email,
+      otp_period_minutes: OTP_PERIOD_MINUTES,
+      otp_subject: OTP_SUBJECT,
+    };
+
+    const response = await fetch(OTP_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`OTP API failed: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const email = document.getElementById("email").value.trim();
-    const state = getState();
+    const email = emailInput?.value.trim();
+    if (!email) {
+      message.textContent = "Введіть корпоративну пошту.";
+      message.className = "message error";
+      return;
+    }
 
-    if (email) {
-      state.user.email = email;
-      const emailName = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
-      if (emailName) {
-        state.user.name = emailName
-          .split(" ")
-          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-          .join(" ");
+    if (!otpState.sent) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Надсилання...";
+
+      try {
+        const data = await sendOtp(email);
+        const expectedCode = String(data?.otp_code || "").trim();
+
+        if (!expectedCode) {
+          throw new Error("OTP code is missing in API response");
+        }
+
+        otpState.sent = true;
+        otpState.email = email;
+        otpState.expectedCode = expectedCode;
+
+        otpStep?.classList.remove("hidden");
+        otpInput?.focus();
+        emailInput.setAttribute("readonly", "readonly");
+
+        submitButton.textContent = "Підтвердити OTP";
+        message.textContent = "Код OTP відправлено на пошту. Введіть код для входу.";
+        message.className = "message";
+      } catch (_error) {
+        message.textContent = "Не вдалося надіслати OTP. Перевірте пошту або доступ до API.";
+        message.className = "message error";
+        submitButton.textContent = "Увійти";
+      } finally {
+        submitButton.disabled = false;
       }
+
+      return;
+    }
+
+    const enteredOtp = String(otpInput?.value || "").trim();
+    if (!enteredOtp) {
+      message.textContent = "Введіть OTP код.";
+      message.className = "message error";
+      return;
+    }
+
+    if (email !== otpState.email) {
+      message.textContent = "Пошта змінена. Надішліть OTP ще раз.";
+      message.className = "message error";
+      otpState.sent = false;
+      otpState.expectedCode = "";
+      otpStep?.classList.add("hidden");
+      emailInput.removeAttribute("readonly");
+      submitButton.textContent = "Увійти";
+      return;
+    }
+
+    if (enteredOtp !== otpState.expectedCode) {
+      message.textContent = "Невірний OTP код.";
+      message.className = "message error";
+      return;
+    }
+
+    const state = getState();
+    state.user.email = email;
+    const emailName = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
+    if (emailName) {
+      state.user.name = emailName
+        .split(" ")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ");
     }
 
     saveState(state);

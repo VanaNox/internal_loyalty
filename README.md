@@ -30,7 +30,7 @@ python3 server.py
 - `olia.k@company.com` / `demo123`
 - `maksym.p@company.com` / `demo123`
 
-> Для static-режиму без запущеного backend логін у `index.html` зараз працює з будь-якими введеними значеннями (спрощений demo flow).
+> Для static-режиму логін у `index.html` працює через OTP API (`otp_send`), після чого користувач вводить OTP код і проходить валідацію на клієнті.
 
 ## Деплой на GitHub Pages (автоматично)
 

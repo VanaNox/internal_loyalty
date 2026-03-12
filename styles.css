@@ -1075,3 +1075,17 @@ textarea:focus-visible {
   background: rgba(248, 250, 252, 0.95);
   font-weight: 700;
 }
+
+#otp-step {
+  margin-top: 2px;
+}
+
+#email[readonly] {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+#login-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
