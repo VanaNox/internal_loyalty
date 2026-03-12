@@ -120,35 +120,26 @@ function handleLogin() {
     form.appendChild(message);
   }
 
-  form.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
+
     const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const state = getState();
 
-    try {
-      const response = await fetch(`${API_BASE}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        message.textContent = "Невірний email або пароль.";
-        message.className = "message error";
-        return;
+    if (email) {
+      state.user.email = email;
+      const emailName = email.split("@")[0]?.replace(/[._-]+/g, " ").trim();
+      if (emailName) {
+        state.user.name = emailName
+          .split(" ")
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ");
       }
-
-      const data = await response.json();
-      const state = getState();
-      state.user = data.user;
-      saveState(state);
-
-      localStorage.setItem("gempulse_auth", "true");
-      window.location.href = "profile.html";
-    } catch (_error) {
-      message.textContent = "Не вдалося підключитися до API. Запусти server.py.";
-      message.className = "message error";
     }
+
+    saveState(state);
+    localStorage.setItem("gempulse_auth", "true");
+    window.location.href = "profile.html";
   });
 }
 

@@ -30,6 +30,8 @@ python3 server.py
 - `olia.k@company.com` / `demo123`
 - `maksym.p@company.com` / `demo123`
 
+> Для static-режиму без запущеного backend логін у `index.html` зараз працює з будь-якими введеними значеннями (спрощений demo flow).
+
 ## Деплой на GitHub Pages (автоматично)
 
 Workflow `.github/workflows/deploy-gh-pages.yml` деплоїть тільки статичну частину на push у `main`.
