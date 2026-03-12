@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemPulse | Магазин</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>GemPulse</h1>
+      <nav>
+        <a href="profile.html">Профіль</a>
+        <a href="transfer.html">Передача гемів</a>
+        <a href="shop.html" class="active">Магазин</a>
+      </nav>
+      <button id="logout" class="btn btn-ghost">Вийти</button>
+    </header>
+
+    <main class="container shop-page">
+      <section class="shop-toolbar card">
+        <div class="shop-search-wrap">
+          <span class="shop-search-icon">🔎</span>
+          <input id="shop-search" class="shop-search" type="search" placeholder="Search rewards..." aria-label="Пошук винагород" />
+        </div>
+        <div id="shop-categories" class="shop-categories" aria-label="Категорії магазину"></div>
+      </section>
+
+      <section>
+        <div id="shop-grid" class="shop-grid shop-grid-premium"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
