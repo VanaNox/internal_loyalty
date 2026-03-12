@@ -93,7 +93,7 @@ body::after {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 31px;
   color: var(--text-primary);
 }
 
@@ -219,7 +219,7 @@ body.scrolled .topbar {
 
 .profile-badge {
   margin: var(--space-2) 0 0;
-  font-size: 13px;
+  font-size: 31px;
   color: #4338ca;
   background: rgba(99, 102, 241, 0.12);
   display: inline-flex;
@@ -400,7 +400,7 @@ body.scrolled .topbar {
 
 .stat-label {
   color: var(--ink-secondary);
-  font-size: 13px;
+  font-size: 31px;
 }
 
 .stat-icon {
@@ -423,7 +423,7 @@ body.scrolled .topbar {
 .stat-caption {
   margin: 2px 0 0;
   color: var(--ink-secondary);
-  font-size: 13px;
+  font-size: 31px;
 }
 
 .history-card h3 {
@@ -1088,4 +1088,18 @@ textarea:focus-visible {
 #login-submit:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.auth-card h1 {
+  margin-top: 0;
+  text-align: center;
+}
+
+#login-submit {
+  display: block;
+  width: min(260px, 100%);
+  min-height: 84px;
+  margin: 12px auto 0;
+  font-size: 28px;
+  font-weight: 700;
 }
