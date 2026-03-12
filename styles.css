@@ -1233,10 +1233,6 @@ textarea:focus-visible {
   box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
 }
 
-.login-card input:invalid:not(:placeholder-shown):not(:focus) {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-}
 
 .login-card #login-submit {
   display: block;
