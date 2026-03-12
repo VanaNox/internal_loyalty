@@ -25,3 +25,167 @@ body {
 .nav-link.active {
   @apply bg-sky-500/20 text-sky-200;
 }
+
+.profile-page-shell {
+  position: relative;
+}
+
+.profile-page-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(32, 98, 255, 0.33), transparent 44%),
+    radial-gradient(circle at 88% 22%, rgba(26, 175, 255, 0.26), transparent 44%),
+    radial-gradient(circle at 50% 80%, rgba(108, 40, 244, 0.26), transparent 46%),
+    linear-gradient(145deg, #081333, #0a1e4f 45%, #102f6a);
+}
+
+.profile-page-shell::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.26) 0.7px, transparent 0.7px);
+  background-size: 3px 3px;
+  opacity: 0.13;
+}
+
+.profile-surface {
+  border-radius: 1.35rem;
+  border: 1px solid rgba(148, 163, 184, 0.34);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 251, 255, 0.93) 100%);
+  box-shadow: 0 20px 60px rgba(1, 13, 44, 0.28);
+  backdrop-filter: blur(8px);
+}
+
+.profile-avatar {
+  display: flex;
+  width: 4.25rem;
+  height: 4.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1f2b45;
+  background: linear-gradient(160deg, #f7d34f 0%, #f4c214 100%);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.8), 0 16px 30px rgba(162, 118, 0, 0.24);
+}
+
+.profile-block-title {
+  color: #3e485d;
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.profile-gem-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.48);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 1rem 1.1rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.13);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.profile-gem-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.19);
+}
+
+.profile-gem-name {
+  color: #27334b;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.profile-gem-count {
+  color: #1b2438;
+  font-size: 2.55rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+.profile-gem-orb {
+  --gem-orb-size: 58px;
+  width: var(--gem-orb-size);
+  height: var(--gem-orb-size);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 30% 28%, #253fa2 0%, #172b7f 45%, #0b1f67 100%);
+  border: 3px solid #3b82f6;
+  box-shadow: 0 10px 22px rgba(14, 23, 58, 0.35);
+}
+
+.gem-crystal {
+  width: 64%;
+  height: 64%;
+  filter: drop-shadow(0 4px 9px rgba(6, 15, 46, 0.45));
+}
+
+.gem-crystal-yellow { color: #f7c738; }
+.gem-crystal-pink { color: #ff7abf; }
+.gem-crystal-green { color: #37d27f; }
+.gem-crystal-blue { color: #5a91ff; }
+.gem-crystal-ice { color: #a8c4ff; }
+
+.gem-ring-yellow { border-color: #f2c94c; }
+.gem-ring-pink { border-color: #d946ef; }
+.gem-ring-green { border-color: #22c55e; }
+.gem-ring-blue { border-color: #3b82f6; }
+.gem-ring-amber { border-color: #f59e0b; }
+.gem-ring-ice { border-color: #60a5fa; }
+
+.profile-tab {
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  transition: all 180ms ease;
+}
+
+.profile-tab:hover {
+  color: #1e293b;
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.profile-tab:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.profile-tab-active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.2);
+}
+
+@media (max-width: 1024px) {
+  .profile-block-title { font-size: 1.6rem; }
+  .profile-gem-name { font-size: 1.65rem; }
+  .profile-gem-count { font-size: 2.15rem; }
+}
+
+@media (max-width: 640px) {
+  .profile-avatar {
+    width: 3.4rem;
+    height: 3.4rem;
+    font-size: 1.3rem;
+  }
+
+  .profile-block-title { font-size: 1.3rem; }
+
+  .profile-gem-name { font-size: 1.3rem; }
+  .profile-gem-count { font-size: 1.8rem; }
+}
