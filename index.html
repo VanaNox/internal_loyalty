@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemPulse | Логін</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="centered-page">
+      <p class="program-title">SFP Internal Loyalty Program</p>
+      <section class="card auth-card">
+        <h1>GemPulse</h1>
+        <form id="login-form">
+          <label for="email">Корпоративна пошта</label>
+          <input id="email" type="email" placeholder="name@company.com" required />
+
+          <div id="otp-step" class="hidden">
+            <label for="otp-code">OTP код</label>
+            <input id="otp-code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" maxlength="6" />
+          </div>
+
+          <button id="login-submit" type="submit" class="btn btn-primary">Увійти</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

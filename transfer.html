@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemPulse | Передача гемів</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>GemPulse</h1>
+      <nav>
+        <a href="profile.html">Профіль</a>
+        <a href="transfer.html" class="active">Передача гемів</a>
+        <a href="shop.html">Магазин</a>
+      </nav>
+      <button id="logout" class="btn btn-ghost">Вийти</button>
+    </header>
+
+    <main class="container transfer-page">
+      <section class="card transfer-card">
+        <h2 class="transfer-title">Винагородити Колегу</h2>
+
+        <form id="transfer-form" class="form-grid transfer-form-grid" novalidate>
+          <div class="field-wrap">
+            <label for="colleague-search" class="field-label-center">Кому</label>
+            <div id="colleague-combobox" class="combo" data-combobox="colleague">
+              <input
+                id="colleague-search"
+                class="combo-input"
+                type="text"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="colleague-listbox"
+                aria-autocomplete="list"
+                aria-activedescendant=""
+                autocomplete="off"
+                placeholder="Почни вводити ім'я колеги"
+              />
+              <ul id="colleague-listbox" class="combo-list" role="listbox"></ul>
+              <input id="colleague" type="hidden" required />
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <label for="gem-type-trigger" class="field-label-center">Тип гему</label>
+            <div id="gem-type-dropdown" class="combo combo-static" data-combobox="gem-type">
+              <button
+                id="gem-type-trigger"
+                type="button"
+                class="combo-trigger"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="gem-type-listbox"
+                aria-activedescendant=""
+              >
+                <span class="combo-trigger-placeholder">Оберіть тип</span>
+              </button>
+              <ul id="gem-type-listbox" class="combo-list" role="listbox"></ul>
+              <input id="gem-type" type="hidden" required />
+            </div>
+          </div>
+
+          <div class="full-width field-wrap">
+            <label for="comment" class="field-label-center">Коментар (за що дякуєте)</label>
+            <textarea id="comment" rows="4" placeholder="Наприклад: Дякую за допомогу з релізом" required></textarea>
+          </div>
+
+          <div class="full-width transfer-cta-wrap">
+            <button type="submit" class="btn btn-primary transfer-cta">Винагородити</button>
+          </div>
+        </form>
+
+        <p id="transfer-message" class="message transfer-message"></p>
+      </section>
+    </main>
+
+    <div id="gems-fall-layer" class="gems-fall-layer" aria-hidden="true"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
