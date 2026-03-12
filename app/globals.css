@@ -1883,3 +1883,183 @@ body {
   color: #22c55e;
   background: rgba(34, 197, 94, 0.2);
 }
+
+/* Gem component: premium crystal visual + lightweight motion */
+.gem-root {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  isolation: isolate;
+  transform: translateZ(0) scale(1);
+  transition: transform 220ms ease, filter 220ms ease;
+  filter: drop-shadow(0 6px 14px rgba(2, 6, 23, 0.38)) drop-shadow(0 0 10px var(--gem-glow, rgba(79, 163, 255, 0.24)));
+}
+
+.gem-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.gem-svg {
+  width: 84%;
+  height: 84%;
+  display: block;
+  opacity: 0.96;
+}
+
+.gem-root.is-animated {
+  animation: gem-breathe 3.8s ease-in-out infinite;
+}
+
+.gem-root.is-animated:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 18px rgba(2, 6, 23, 0.42)) drop-shadow(0 0 14px var(--gem-glow, rgba(79, 163, 255, 0.32)));
+}
+
+.gem-sweep {
+  position: absolute;
+  inset: -28%;
+  background: linear-gradient(120deg, transparent 22%, rgba(255, 255, 255, 0.58) 48%, transparent 74%);
+  transform: translateX(-130%) rotate(10deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gem-root.is-animated:hover .gem-sweep {
+  opacity: 0.95;
+  animation: gem-sweep 520ms ease;
+}
+
+.gem-root.is-bursting {
+  animation: gem-click 320ms ease;
+}
+
+.gem-particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 10px var(--gem-glow, rgba(79, 163, 255, 0.34));
+}
+
+.gem-particle-a { top: 22%; left: 68%; }
+.gem-particle-b { top: 66%; left: 24%; }
+.gem-particle-c { top: 52%; left: 76%; }
+
+.gem-root.is-bursting .gem-particle-a { animation: gem-spark-a 420ms ease-out; }
+.gem-root.is-bursting .gem-particle-b { animation: gem-spark-b 420ms ease-out; }
+.gem-root.is-bursting .gem-particle-c { animation: gem-spark-c 420ms ease-out; }
+
+@keyframes gem-breathe {
+  0%, 100% { filter: drop-shadow(0 6px 14px rgba(2, 6, 23, 0.38)) drop-shadow(0 0 10px var(--gem-glow, rgba(79, 163, 255, 0.24))); }
+  50% { filter: drop-shadow(0 6px 14px rgba(2, 6, 23, 0.4)) drop-shadow(0 0 13px var(--gem-glow, rgba(79, 163, 255, 0.3))); }
+}
+
+@keyframes gem-sweep {
+  0% { transform: translateX(-130%) rotate(10deg); }
+  100% { transform: translateX(130%) rotate(10deg); }
+}
+
+@keyframes gem-click {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes gem-spark-a {
+  0% { transform: translate3d(0, 0, 0) scale(0.5); opacity: 0.9; }
+  100% { transform: translate3d(9px, -12px, 0) scale(0.1); opacity: 0; }
+}
+
+@keyframes gem-spark-b {
+  0% { transform: translate3d(0, 0, 0) scale(0.5); opacity: 0.9; }
+  100% { transform: translate3d(-11px, 10px, 0) scale(0.1); opacity: 0; }
+}
+
+@keyframes gem-spark-c {
+  0% { transform: translate3d(0, 0, 0) scale(0.5); opacity: 0.9; }
+  100% { transform: translate3d(12px, 5px, 0) scale(0.1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gem-root,
+  .gem-root.is-animated,
+  .gem-root.is-bursting,
+  .gem-root.is-animated:hover .gem-sweep,
+  .gem-root.is-bursting .gem-particle {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .gem-root.is-animated:hover {
+    transform: none;
+  }
+}
+
+/* Transfer field palette lock */
+.transfer-field {
+  color: #e2e8f0;
+  caret-color: #e2e8f0;
+}
+
+.transfer-field::placeholder {
+  color: #94a3b8;
+}
+
+.transfer-dropdown {
+  scrollbar-color: rgba(148, 163, 184, 0.5) rgba(2, 6, 23, 0.5);
+}
+
+.transfer-field:-webkit-autofill,
+.transfer-field:-webkit-autofill:hover,
+.transfer-field:-webkit-autofill:focus,
+.transfer-field:-webkit-autofill:active {
+  -webkit-text-fill-color: #e2e8f0 !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(15, 26, 62, 0.92) inset !important;
+  box-shadow: 0 0 0 1000px rgba(15, 26, 62, 0.92) inset !important;
+  transition: background-color 99999s ease-in-out 0s;
+}
+
+.transfer-field-gradient {
+  background-image: linear-gradient(160deg, rgba(20, 38, 78, 0.92), rgba(17, 30, 69, 0.9) 52%, rgba(28, 41, 88, 0.9)) !important;
+  background-color: transparent !important;
+}
+
+/* Transfer field hard override (final) */
+.transfer-field {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.transfer-field.transfer-field-gradient {
+  background-image: linear-gradient(160deg, rgba(20, 38, 78, 0.92), rgba(17, 30, 69, 0.9) 52%, rgba(28, 41, 88, 0.9)) !important;
+  background-color: transparent !important;
+}
+
+.transfer-field.transfer-field-gradient:-webkit-autofill,
+.transfer-field.transfer-field-gradient:-webkit-autofill:hover,
+.transfer-field.transfer-field-gradient:-webkit-autofill:focus,
+.transfer-field.transfer-field-gradient:-webkit-autofill:active {
+  -webkit-text-fill-color: #e2e8f0 !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(20, 38, 78, 0.92) inset !important;
+  box-shadow: 0 0 0 1000px rgba(20, 38, 78, 0.92) inset !important;
+  background-image: linear-gradient(160deg, rgba(20, 38, 78, 0.92), rgba(17, 30, 69, 0.9) 52%, rgba(28, 41, 88, 0.9)) !important;
+}
+
+/* Transfer controls strict background parity */
+.transfer-field,
+.transfer-field:focus,
+.transfer-field:hover,
+.transfer-field:active {
+  background-image: linear-gradient(160deg, rgba(20, 38, 78, 0.92), rgba(17, 30, 69, 0.9) 52%, rgba(28, 41, 88, 0.9)) !important;
+  background-color: transparent !important;
+}
