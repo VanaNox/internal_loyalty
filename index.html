@@ -6,14 +6,36 @@
     <title>GemPulse | Логін</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <main class="centered-page">
-      <p class="program-title">SFP Internal Loyalty Program</p>
-      <section class="card auth-card">
+  <body class="login-screen">
+    <main class="login-layout" aria-label="Сторінка входу">
+      <h2 class="login-program-title">SFP INTERNAL LOYALTY PROGRAM</h2>
+
+      <aside class="login-brand" aria-hidden="true">
         <h1>GemPulse</h1>
-        <form id="login-form">
+        <svg class="brand-graph" viewBox="0 0 430 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 105H125L178 70H245L292 110H400" stroke="rgba(226,232,240,.75)" stroke-width="2"/>
+          <path d="M125 105L68 145" stroke="rgba(226,232,240,.55)" stroke-width="2"/>
+          <path d="M178 70L220 124" stroke="rgba(226,232,240,.55)" stroke-width="2"/>
+          <path d="M245 70L220 124" stroke="rgba(226,232,240,.55)" stroke-width="2"/>
+          <circle cx="20" cy="105" r="6" fill="#dbeafe"/>
+          <circle cx="125" cy="105" r="11" stroke="#cbd5e1" stroke-width="3"/>
+          <circle cx="178" cy="70" r="5.5" fill="#dbeafe"/>
+          <circle cx="245" cy="70" r="9" stroke="#cbd5e1" stroke-width="3"/>
+          <circle cx="292" cy="110" r="5.5" fill="#dbeafe"/>
+          <circle cx="400" cy="110" r="9" stroke="#94a3b8" stroke-width="3"/>
+          <circle cx="68" cy="145" r="7" stroke="#94a3b8" stroke-width="3"/>
+          <path d="M300 38h28l8 10-22 31-22-31 8-10Z" stroke="#e2e8f0" stroke-width="2"/>
+          <path d="M214 110h34l8 10-25 36-25-36 8-10Z" stroke="#94a3b8" stroke-width="2"/>
+          <path d="M340 122h24l7 8-19 27-19-27 7-8Z" stroke="#94a3b8" stroke-width="2"/>
+        </svg>
+      </aside>
+
+      <section class="card auth-card login-card" aria-labelledby="login-title">
+        <h3 id="login-title">GemPulse</h3>
+
+        <form id="login-form" novalidate>
           <label for="email">Корпоративна пошта</label>
-          <input id="email" type="email" placeholder="name@company.com" required />
+          <input id="email" type="email" placeholder="Ваша пошта" required />
 
           <div id="otp-step" class="hidden">
             <label for="otp-code">OTP код</label>
@@ -21,8 +43,17 @@
           </div>
 
           <button id="login-submit" type="submit" class="btn btn-primary">Увійти</button>
+          <a href="#" class="forgot-link" aria-label="Відновити пароль">Забули пароль?</a>
         </form>
       </section>
+
+      <div class="lang-toggle" role="navigation" aria-label="Вибір мови">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <button type="button" class="lang-btn active" aria-current="true">Укр</button>
+        <span class="lang-separator">|</span>
+        <button type="button" class="lang-btn">Eng</button>
+        <span class="lang-star" aria-hidden="true">✦</span>
+      </div>
     </main>
 
     <script src="app.js"></script>

@@ -34,7 +34,7 @@ python3 server.py
 
 ## Деплой на GitHub Pages (автоматично)
 
-Workflow `.github/workflows/deploy-gh-pages.yml` деплоїть тільки статичну частину на push у `main`.
+Workflow `.github/workflows/deploy-gh-pages.yml` тепер збирає React/Next.js (`next build` з `output: export`) і деплоїть папку `out` у GitHub Pages на push у `main`.
 
 
 ## Оновлення UI
@@ -62,3 +62,10 @@ npm run dev
 - `http://localhost:3000`
 
 > Поточна версія на static HTML + `server.py` залишається в репозиторії для backward compatibility.
+
+
+## GitHub Pages = React (Next static export)
+
+- GitHub Pages публікує саме React/Next-версію (зі static export), а не legacy `index.html`.
+- Для коректних шляхів на Pages у `next.config.mjs` увімкнено автоматичні `basePath/assetPrefix` у CI.
+- Legacy static + `server.py` залишено для локального demo/backward compatibility.
