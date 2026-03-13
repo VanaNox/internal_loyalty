@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Send, Wallet } from 'lucide-react';
 import Gem, { type GemProps } from '@/components/Gem';
@@ -140,13 +139,13 @@ function TopNavigation() {
   return (
     <header className="sticky top-0 z-20 border-b border-white/10 bg-[#070d21]/70 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1650px] items-center justify-between px-7 py-3 lg:px-12">
-        <Link href="/profile" className="text-3xl font-semibold tracking-tight text-slate-100">
+        <a href="/profile" className="text-3xl font-semibold tracking-tight text-slate-100">
           GemPulse
-        </Link>
+        </a>
 
         <nav className="hidden items-center gap-2 md:flex" aria-label="Primary">
           {NAV_ITEMS.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className={cn(
@@ -157,13 +156,13 @@ function TopNavigation() {
               )}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
-        <Link href="/" className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10">
+        <a href="/" className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10">
           Exit
-        </Link>
+        </a>
       </div>
     </header>
   );
@@ -222,12 +221,12 @@ function ReceivedGemsCard({ gems }: { gems: ReceivedGem[] }) {
         ))}
       </div>
 
-      <Link
+      <a
         href="/shop"
         className="mx-auto mt-auto inline-flex min-w-[330px] items-center justify-center rounded-xl border border-amber-300/35 bg-amber-400/10 px-4 py-2 text-sm font-medium text-amber-100 transition hover:bg-amber-400/20"
       >
         Check items available
-      </Link>
+      </a>
     </SurfaceCard>
   );
 }
@@ -247,7 +246,7 @@ function SprintGivingCard({ countdownValue }: { countdownValue: { d: number; h: 
 
       <div className="grid grid-cols-2 gap-3">
         {Array.from({ length: 2 }).map((_, idx) => (
-          <Link
+          <a
             key={`ready-${idx}`}
             href="/transfer"
             className="group rounded-xl border border-dashed border-slate-500/50 bg-slate-900/25 px-3 py-4 transition hover:border-slate-300/65 hover:bg-slate-800/45"
@@ -256,7 +255,7 @@ function SprintGivingCard({ countdownValue }: { countdownValue: { d: number; h: 
               <GemToken type="sapphire" size="sm" muted />
               <p className="text-sm font-medium text-slate-300 group-hover:text-slate-100">Ready to give</p>
             </div>
-          </Link>
+          </a>
         ))}
       </div>
 
@@ -297,12 +296,12 @@ function ManagerialCard() {
         </div>
       </div>
 
-      <Link
+      <a
         href="/transfer"
         className="mt-4 inline-flex items-center justify-center rounded-xl border border-amber-300/35 bg-amber-400/10 px-4 py-2 text-sm font-medium text-amber-100 transition hover:bg-amber-400/20"
       >
         Give leadership recognition
-      </Link>
+      </a>
     </SurfaceCard>
   );
 }

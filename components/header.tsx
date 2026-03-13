@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 const links = [
   { href: '/profile', label: 'Profile' },
   { href: '/transfer', label: 'Send a Gem' },
@@ -10,13 +8,13 @@ export function Header({ active }: { active?: string }) {
   return (
     <header className="sticky top-0 z-20 border-b border-white/10 bg-[#070d21]/70 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1650px] items-center justify-between px-7 py-3 lg:px-12">
-        <Link href="/profile" className="text-3xl font-semibold tracking-tight text-slate-100">
+        <a href="/profile" className="text-3xl font-semibold tracking-tight text-slate-100">
           GemPulse
-        </Link>
+        </a>
 
         <nav className="hidden items-center gap-2 md:flex" aria-label="Main navigation">
           {links.map((link) => (
-            <Link
+            <a
               key={link.href}
               href={link.href}
               className={
@@ -26,13 +24,13 @@ export function Header({ active }: { active?: string }) {
               }
             >
               {link.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
-        <Link href="/" className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10">
+        <a href="/" className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10">
           Exit
-        </Link>
+        </a>
       </div>
     </header>
   );

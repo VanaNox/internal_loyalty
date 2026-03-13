@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repo = process.env.GITHUB_REPOSITORY?.split('/')[1] ?? '';
+const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
+  output: isDev ? undefined : 'export',
+  trailingSlash: isDev ? false : true,
   images: {
     unoptimized: true
   },
